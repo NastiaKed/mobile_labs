@@ -200,7 +200,9 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Welcome to Crochet App!', style: TextStyle(fontSize: 24)),
+            const Text('Welcome to Crochet App!',
+                style: TextStyle(fontSize: 24),
+            ),
             ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/profile'),
               child: const Text('Go to Profile'),
