@@ -1,145 +1,215 @@
 import 'package:flutter/material.dart';
 
+MaterialColor customPink = const MaterialColor(
+  0xFFF48FB1,
+  <int, Color>{
+    50: Color(0xFFFCE4EC),
+    100: Color(0xFFF8BBD0),
+    200: Color(0xFFF48FB1),
+    300: Color(0xFFF06292),
+    400: Color(0xFFEC407A),
+    500: Color(0xFFE91E63),
+    600: Color(0xFFD81B60),
+    700: Color(0xFFC2185B),
+    800: Color(0xFFAD1457),
+    900: Color(0xFF880E4F),
+  },
+);
+
 void main() {
-  runApp(const MyApp());
+  runApp(const CrochetApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class CrochetApp extends StatelessWidget {
+  const CrochetApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CounterApp',
-      theme: ThemeData(primarySwatch: Colors.green),
-      home: const MyHomePage(),
+      title: 'Crochet',
+      theme: ThemeData(
+        scaffoldBackgroundColor: customPink.shade100,
+        primarySwatch: customPink,
+        useMaterial3: false,
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LogIn(),
+        '/register': (context) => const Register(),
+        '/profile': (context) => const UserProfile(),
+        '/home': (context) => const HomePage(),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class LogIn extends StatelessWidget {
+  const LogIn({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Log In')),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Log In', style: TextStyle(fontSize: 24)),
+            const TextField(
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
+            const TextField(
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/home'),
+              child: const Text('Log In'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/register'),
+              child: const Text('Go to Register'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
-  int _counter = 0;
-  final TextEditingController _controller = TextEditingController();
-  late AnimationController _animationController;
-  late Animation<Color?> _backgroundAnimation;
+class Register extends StatelessWidget {
+  const Register({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Register')),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Register', style: TextStyle(fontSize: 24)),
+            const TextField(
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
+            const TextField(
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Register'),
+            ),
+          ],
+        ),
+      ),
     );
-
-    _backgroundAnimation = ColorTween(
-      begin: Colors.white,
-      end: Colors.green[100],
-    ).animate(_animationController);
   }
+}
 
-  void _incrementCounter() {
+class UserProfile extends StatefulWidget {
+  const UserProfile({super.key});
+
+  @override
+  State<UserProfile> createState() => _UserProfileState();
+}
+
+class _UserProfileState extends State<UserProfile> {
+  String nickname = "User123";
+  bool isEditing = false;
+  final TextEditingController _nicknameController = TextEditingController();
+
+  void _toggleEditing() {
     setState(() {
-      final String inputText = _controller.text.trim();
-
-      if (inputText == 'Avada Kedavra') {
-        _counter = 0;
+      isEditing = !isEditing;
+      if (isEditing) {
+        _nicknameController.text = nickname;
       } else {
-        final int? value = int.tryParse(inputText);
-        if (value != null) {
-          _counter += value;
-        }
-      }
-
-      if (_counter > 50) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
+        nickname = _nicknameController.text;
       }
     });
   }
 
-  String? _getMessage() {
-    if (_counter >= 20 && _counter < 40) {
-      return 'Обережно, не переборщи';
-    } else if (_counter >= 40 && _counter < 80) {
-      return 'Ти вже на грані';
-    } else if (_counter >= 80 && _counter < 200) {
-      return 'Ти колись зупинишся чи нє!?!?!?';
-    } else if (_counter >= 200 && _counter < 300) {
-      return 'Я зараз почну погрожувати!!!!';
-    } else if (_counter >= 300 && _counter < 1000) {
-      return 'Тільки не дійди до 2000';
-    } else if (_counter >= 2000 && _counter < 100000) {
-      return 'Ну все...Гайки....Ти викликав їжака';
-    }
-    return null;
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _animationController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _backgroundAnimation,
-      builder: (context, child) {
-        return Scaffold(
-          backgroundColor: _backgroundAnimation.value,
-          appBar: AppBar(title: const Text('Мемний лічильник')),
-          body: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Лічильник: $_counter',
-                  style: const TextStyle(fontSize: 24),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Profile')),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage('assets/image/avatar.png'),
                 ),
-                if (_getMessage() != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      _getMessage()!,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (isEditing) TextField(
+                        controller: _nicknameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Enter new nickname',
+                        ),
+                      ) else Text(
+                        nickname,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: _toggleEditing,
+                        child: Text(isEditing ? 'Save' : 'Change Nickname'),
+                      ),
+                    ],
                   ),
-                if (_counter >= 2000 && _counter < 100000)
-                  Image.asset('assets/image/hedgehog.png', height: 150),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: _controller,
-                  keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Введіть число або "Avada Kedavra"',
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _incrementCounter,
-                  child: const Text('Додати до лічильника'),
                 ),
               ],
             ),
-          ),
-        );
-      },
+            const Spacer(),
+            Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pushNamed(context, '/home'),
+                child: const Text('Go to Home'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Welcome to Crochet App!', style: TextStyle(fontSize: 24)),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/profile'),
+              child: const Text('Go to Profile'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
