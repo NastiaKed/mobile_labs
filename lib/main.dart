@@ -51,7 +51,7 @@ class LogIn extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Log In')),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -87,7 +87,7 @@ class Register extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Register')),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -119,7 +119,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  String nickname = "User123";
+  String nickname = 'User123';
   bool isEditing = false;
   final TextEditingController _nicknameController = TextEditingController();
 
@@ -139,11 +139,10 @@ class _UserProfileState extends State<UserProfile> {
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const CircleAvatar(
                   radius: 50,
@@ -178,7 +177,6 @@ class _UserProfileState extends State<UserProfile> {
             ),
             const Spacer(),
             Align(
-              alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () => Navigator.pushNamed(context, '/home'),
                 child: const Text('Go to Home'),

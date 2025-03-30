@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-MaterialColor customPink = MaterialColor(
+MaterialColor customPink = const MaterialColor(
   0xFFF48FB1, // Основний колір (Colors.pink[200])
   <int, Color>{
     50: Color(0xFFFCE4EC),
