@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 MaterialColor customPink = const MaterialColor(
   0xFFF48FB1,
@@ -16,12 +17,17 @@ MaterialColor customPink = const MaterialColor(
   },
 );
 
-void main() {
-  runApp(const CrochetApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final loggedIn = prefs.getBool('loggedIn') ?? false;
+
+  runApp(CrochetApp(loggedIn: loggedIn));
 }
 
 class CrochetApp extends StatelessWidget {
-  const CrochetApp({super.key});
+  final bool loggedIn;
+  const CrochetApp({super.key, required this.loggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +38,7 @@ class CrochetApp extends StatelessWidget {
         primarySwatch: customPink,
         useMaterial3: false,
       ),
-      initialRoute: '/',
+      initialRoute: loggedIn ? '/home' : '/',
       routes: {
         '/': (context) => const LogIn(),
         '/register': (context) => const Register(),
@@ -49,28 +55,32 @@ class LogIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Log In')),
+      appBar: AppBar(title: const Text('Вхід')),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Log In', style: TextStyle(fontSize: 24)),
+            const Text('Вхід', style: TextStyle(fontSize: 24)),
             const TextField(
-              decoration: InputDecoration(labelText: 'Username'),
+              decoration: InputDecoration(labelText: 'Логін'),
             ),
             const TextField(
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: InputDecoration(labelText: 'Пароль'),
               obscureText: true,
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/home'),
-              child: const Text('Log In'),
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('loggedIn', true);
+                Navigator.pushNamed(context, '/home');
+              },
+              child: const Text('Увійти'),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/register'),
-              child: const Text('Go to Register'),
+              child: const Text('Перейти до реєстрації'),
             ),
           ],
         ),
@@ -85,24 +95,28 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(title: const Text('Реєстрація')),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Register', style: TextStyle(fontSize: 24)),
+            const Text('Реєстрація', style: TextStyle(fontSize: 24)),
             const TextField(
-              decoration: InputDecoration(labelText: 'Username'),
+              decoration: InputDecoration(labelText: 'Логін'),
             ),
             const TextField(
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: InputDecoration(labelText: 'Пароль'),
               obscureText: true,
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Register'),
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('loggedIn', true);
+                Navigator.pushNamed(context, '/home');
+              },
+              child: const Text('Зареєструватися'),
             ),
           ],
         ),
@@ -119,7 +133,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  String nickname = 'User123';
+  String nickname = 'Користувач';
   bool isEditing = false;
   final TextEditingController _nicknameController = TextEditingController();
 
@@ -137,7 +151,7 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(title: const Text('Профіль')),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -153,22 +167,25 @@ class _UserProfileState extends State<UserProfile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (isEditing) TextField(
-                        controller: _nicknameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Enter new nickname',
+                      if (isEditing)
+                        TextField(
+                          controller: _nicknameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Новий нікнейм',
+                          ),
+                        )
+                      else
+                        Text(
+                          nickname,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ) else Text(
-                        nickname,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: _toggleEditing,
-                        child: Text(isEditing ? 'Save' : 'Change Nickname'),
+                        child: Text(isEditing ? 'Зберегти' : 'Змінити нікнейм'),
                       ),
                     ],
                   ),
@@ -176,11 +193,13 @@ class _UserProfileState extends State<UserProfile> {
               ],
             ),
             const Spacer(),
-            Align(
-              child: ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, '/home'),
-                child: const Text('Go to Home'),
-              ),
+            ElevatedButton(
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.remove('loggedIn');
+                Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+              },
+              child: const Text('🚪 Вийти з профілю'),
             ),
           ],
         ),
@@ -214,8 +233,8 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Text(
-              '💡 Порада дня: використовуйте маркери петель, щоб не збитися '
-                  'в узорі.',
+              '💡 Порада дня: використовуйте маркери петель, '
+                  'щоб не збитися в узорі.',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 20),
@@ -230,9 +249,7 @@ class HomePage extends StatelessWidget {
                   child: ListTile(
                     title: Text(crochetProjects[index]),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      // Майбутня навігація до деталей проєкту
-                    },
+                    onTap: () {},
                   ),
                 ),
               ),
@@ -243,8 +260,8 @@ class HomePage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Додавання нового проєкту в '
-                          'розробці'),),
+                      const SnackBar(content: Text('Додавання нового проєкту '
+                          'в розробці')),
                     );
                   },
                   child: const Text('➕ Додати проєкт'),
