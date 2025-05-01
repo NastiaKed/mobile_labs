@@ -27,7 +27,7 @@ void main() async {
 
 class CrochetApp extends StatelessWidget {
   final bool loggedIn;
-  const CrochetApp({super.key, required this.loggedIn});
+  const CrochetApp({required this.loggedIn, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,9 @@ class LogIn extends StatelessWidget {
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setBool('loggedIn', true);
-                Navigator.pushNamed(context, '/home');
+                if (context.mounted) {
+                  Navigator.pushNamed(context, '/home');
+                }
               },
               child: const Text('Увійти'),
             ),
@@ -114,7 +116,9 @@ class Register extends StatelessWidget {
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setBool('loggedIn', true);
-                Navigator.pushNamed(context, '/home');
+                if (context.mounted) {
+                  Navigator.pushNamed(context, '/home');
+                }
               },
               child: const Text('Зареєструватися'),
             ),
@@ -197,7 +201,9 @@ class _UserProfileState extends State<UserProfile> {
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.remove('loggedIn');
-                Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                }
               },
               child: const Text('🚪 Вийти з профілю'),
             ),
@@ -260,8 +266,8 @@ class HomePage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Додавання нового проєкту '
-                          'в розробці')),
+                      const SnackBar(content: Text('Додавання нового '
+                          'проєкту в розробці'),),
                     );
                   },
                   child: const Text('➕ Додати проєкт'),
