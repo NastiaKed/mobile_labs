@@ -214,7 +214,8 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Text(
-              '💡 Порада дня: використовуйте маркери петель, щоб не збитися в узорі.',
+              '💡 Порада дня: використовуйте маркери петель, щоб не збитися '
+                  'в узорі.',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 20),
@@ -242,7 +243,8 @@ class HomePage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Додавання нового проєкту в розробці')),
+                      const SnackBar(content: Text('Додавання нового проєкту в '
+                          'розробці'),),
                     );
                   },
                   child: const Text('➕ Додати проєкт'),
@@ -259,4 +261,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
