@@ -192,20 +192,66 @@ class _UserProfileState extends State<UserProfile> {
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  final List<String> crochetProjects = const [
+    '🌸 Ковдра з бабусиних квадратів',
+    '🧣 Теплий зимовий шарф',
+    '🧶 Амігурумі зайчик',
+    '👜 В’яжена бохо-сумка',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: Center(
+      appBar: AppBar(title: const Text('Головна')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Welcome to Crochet App!',
-                style: TextStyle(fontSize: 24),
+            const Text(
+              'Ласкаво просимо у світ в’язання гачком!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/profile'),
-              child: const Text('Go to Profile'),
+            const SizedBox(height: 10),
+            const Text(
+              '💡 Порада дня: використовуйте маркери петель, щоб не збитися в узорі.',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 20),
+            const Text('Поточні проєкти:', style: TextStyle(fontSize: 20)),
+            const SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: crochetProjects.length,
+                itemBuilder: (context, index) => Card(
+                  elevation: 2,
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  child: ListTile(
+                    title: Text(crochetProjects[index]),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      // Майбутня навігація до деталей проєкту
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Додавання нового проєкту в розробці')),
+                    );
+                  },
+                  child: const Text('➕ Додати проєкт'),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.pushNamed(context, '/profile'),
+                  child: const Text('👤 Профіль'),
+                ),
+              ],
             ),
           ],
         ),
@@ -213,3 +259,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
