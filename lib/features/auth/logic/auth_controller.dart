@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:mobile_labs/core/utils/network_service.dart';
 import 'package:mobile_labs/data/local/shared_prefs_user_repository.dart';
 import 'package:mobile_labs/domain/models/user.dart';
 
@@ -13,7 +15,19 @@ class AuthController {
     return null;
   }
 
-  Future<User?> login(String email, String password) async {
+  Future<User?> login(BuildContext context,
+      String email, String password,) async {
+    final hasConnection = await NetworkService().checkConnection();
+    if (!context.mounted) return null;
+    if (!hasConnection) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('❌ Немає підключення до Інтернету'),
+        ),
+      );
+      return null;
+    }
+
     return await repo.loginUser(email, password);
   }
 }

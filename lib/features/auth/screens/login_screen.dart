@@ -17,11 +17,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final _auth = AuthController();
   String? _error;
+  bool _loading = false;
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
-      final User? user = await _auth.login(_email.text, _password.text);
+      setState(() {
+        _loading = true;
+        _error = null;
+      });
+
+      final User? user = await _auth.login(context,
+          _email.text, _password.text,);
+
       if (!mounted) return;
+
+      setState(() => _loading = false);
+
       if (user != null) {
         Navigator.pushReplacementNamed(context, '/home');
       } else {
@@ -57,7 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 validator: (val) => Validators.validatePassword(val!),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              if (_loading) const CircularProgressIndicator()
+              else ElevatedButton(
                 onPressed: _submit,
                 child: const Text('Увійти'),
               ),
