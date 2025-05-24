@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:mobile_labs/core/utils/validators.dart';
 import 'package:mobile_labs/domain/models/user.dart';
 import 'package:mobile_labs/features/profile/logic/profile_controller.dart';
+import 'package:mobile_labs/features/scanner/qr_scanner_screen.dart';
+import 'package:mobile_labs/features/scanner/saved_qr_screen.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -84,9 +87,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 validator: (val) => Validators.validateName(val!),
               )
             else
-              Text('👤 Ім’я: ${_user!.name}', style: const TextStyle(
-                  fontSize: 18,
-              ),
+              Text(
+                '👤 Ім’я: ${_user!.name}',
+                style: const TextStyle(fontSize: 18),
               ),
 
             const SizedBox(height: 10),
@@ -98,9 +101,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 validator: (val) => Validators.validateEmail(val!),
               )
             else
-              Text('📧 Email: ${_user!.email}', style: const TextStyle(
-                  fontSize: 18,
-              ),
+              Text(
+                '📧 Email: ${_user!.email}',
+                style: const TextStyle(fontSize: 18),
               ),
 
             const SizedBox(height: 10),
@@ -127,6 +130,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: const Text('🚪 Вийти'),
                 ),
               ],
+            ),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<String>(builder: (_) => QRScannerScreen()),
+                );
+              },
+              icon: const Icon(Icons.qr_code_scanner),
+              label: const Text('Відсканувати QR'),
+            ),
+
+            const SizedBox(height: 10),
+
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<String>(builder: (_) =>
+                  const SavedQrScreen(),),
+                );
+              },
+              icon: const Icon(Icons.save_alt),
+              label: const Text('Переглянути збережене повідомлення'),
             ),
           ],),
         ),
