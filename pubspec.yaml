@@ -17,6 +17,7 @@ dependencies:
   usb_serial:
   mobile_scanner:
   rxdart:
+  flutter_bloc:
 
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.0.17
