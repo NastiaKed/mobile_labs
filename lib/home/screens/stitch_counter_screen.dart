@@ -17,11 +17,11 @@ class _StitchCounterScreenState extends State<StitchCounterScreen> {
     super.initState();
 
     _mqttClient = MQTTClientWrapper(
-      host: 'url',
+      host: '61968a4e82ea4828b89f61d7fb7f5379.s1.eu.hivemq.cloud',
       clientIdentifier: 'flutter_stitch_${
           DateTime.now().millisecondsSinceEpoch}',
       username: 'admin',
-      password: 'pas',
+      password: 'loginMode7110',
       onData: ({int? stitch}) {
         if (stitch != null) {
           setState(() {
